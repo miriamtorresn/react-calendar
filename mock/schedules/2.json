@@ -1,0 +1,21 @@
+{
+    "schedule" : [
+        {
+            "time": 1637033929,
+            "name": "Special meeting",
+            "description": "Some special meeting",
+            "attendees": [
+                "l.lovewood",
+                "r.weasley"
+            ]
+        },
+        {
+            "time": 1637120329,
+            "name": "One on One meeting",
+            "description": "One on one",
+            "attendees": [
+                "r.weasley"
+            ]
+        }
+    ]
+}
