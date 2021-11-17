@@ -11,25 +11,24 @@ class Login extends React.Component<any> {
     };
 
     state = {
-        username: '',
-        password: ''
+        loginInfo: {
+            username: '',
+            password: ''
+        }
     };
 
-    handleUsernameChange = (event: any) => {
-        this.setState({username: event.target.value});
-    };
-
-    handlePasswordChange = (event: any) => {
-        this.setState({password: event.target.value});
-    };
+    handleInputChange = (event: any) => {
+        this.setState({ loginInfo: {
+                ...this.state.loginInfo,
+                [event.target.name] : event.target.value
+            }
+        });
+    }
 
     submitLogin = (event: React.FormEvent) => {
         const { login } = this.props;
 
-        login({
-            username: this.state.username,
-            password: this.state.password
-        }).then(() => {
+        login(this.state.loginInfo).then(() => {
             const { history } = this.props;
             history.push('/dashboard');
         });
@@ -40,26 +39,22 @@ class Login extends React.Component<any> {
         return (
         <section>
             <form onSubmit={this.submitLogin}>
-                <label>
-                    Username:
-                    <input
-                        type="text"
-                        name="username"
-                        value={this.state.username}
-                        onChange={this.handleUsernameChange}
-                        required
-                    />
-                </label>
-                <label>
-                    Password:
-                    <input
-                        type="password"
-                        name="password"
-                        value={this.state.password}
-                        onChange={this.handlePasswordChange}
-                        required
-                    />
-                </label>
+                <input
+                    type="text"
+                    name="username"
+                    placeholder="Username"
+                    value={this.state.loginInfo.username}
+                    onChange={this.handleInputChange}
+                    required
+                />
+                <input
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    value={this.state.loginInfo.password}
+                    onChange={this.handleInputChange}
+                    required
+                />
                 <input type="submit" value="Submit" />
             </form>
         </section>
