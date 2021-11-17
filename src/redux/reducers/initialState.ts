@@ -4,6 +4,6 @@ export default {
 	},
 	scheduleReducer: {
 		loading: false,
-		schedule: []
+		calendarDays: []
 	}
 };
