@@ -1,4 +1,61 @@
+@import '../../ui/variables';
+@import '../../ui/functions';
+
 .calendar {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr)
+    display: flex;
+    justify-content: center;
+    font-size: rem(18);
+
+    &__wrapper {
+        background-color: $light-text;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+    }
+
+    &__item {
+        text-align: center;
+        color: $med-gray;
+        padding: rem(15) rem(25);
+    }
+
+    &__today {
+        background-color: $main-color-very-light;
+    }
+
+    &__day {
+        font-size: $main-font-size;
+        font-weight: 300;
+    }
+
+    &__heading {
+        border-bottom: solid rem(1) $gray;
+        border-top: solid rem(1) $gray;
+    }
+
+    &__weekend {
+        background-color: $very-light-gray;   
+    }
+
+    &__indicator {
+        width: rem(8);
+        height: rem(8);
+        display: inline-block;
+        border-radius: 50%;
+
+        &--on {
+            background: $main-color-light;
+        }
+    }
+
+    &__number {
+        display: block;
+    }
+
+    &__has-event {
+        cursor: pointer;
+
+        &:hover {
+            border: solid rem(1) $main-color-light;
+        }
+    }
 }

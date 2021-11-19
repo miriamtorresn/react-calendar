@@ -1,18 +1,23 @@
 import React from "react";
 import { connect } from "react-redux";
-import { IMonthDay } from "../../interfaces/IDates";
+
+import './styles.scss';
 
 class MeetingForm extends React.Component<any> {
     state = {
         meetingInfo: {
-            title: '',
-        }
+            name: '',
+            description: '',
+            meetingTime: '',
+            attendees: []
+        },
+        attendeesFields: 1
     }
 
     handleInputChange = (event: any) => {
         this.setState({ meetingInfo: {
-                ...this.state.meetingInfo,
-                [event.target.name] : event.target.value
+            ...this.state.meetingInfo,
+            [event.target.name] : event.target.value
             }
         });
     }
@@ -21,23 +26,64 @@ class MeetingForm extends React.Component<any> {
         event.preventDefault()
         console.log('saving event', this.state);
     }
-    
+
+    addAttendee = (event: React.FormEvent) => {
+        event.preventDefault();
+        this.setState({
+            attendeesFields: this.state.attendeesFields + 1
+        });
+    }
     render() {
         return (
-            <section className="meeting-form">
-                <h3>Event</h3>
-                <form className="row" onSubmit={this.saveEvent}>
-                    <div className="col-md-3">
-                        <input
-                            type="text"
-                            placeholder="Event title"
-                            className="form-control"
-                            name="title"
-                            value={this.state.meetingInfo.title}
-                            onChange={this.handleInputChange}
-                        />
-                    </div>
-                    <button type="submit" className="btn btn-primary">Save</button>
+            <section className="meeting-form__wrapper">
+                <form onSubmit={this.saveEvent} className="meeting-form">
+                    <h2>Event</h2>
+                    <input
+                        type="text"
+                        placeholder="Add event name"
+                        name="name"
+                        value={this.state.meetingInfo.name}
+                        onChange={this.handleInputChange}
+                        required
+                    />
+                    <input
+                        type="text"
+                        placeholder="Add event description"
+                        name="description"
+                        value={this.state.meetingInfo.description}
+                        onChange={this.handleInputChange}
+                        required
+                    />
+                    <input
+                        type="datetime-local"
+                        name="meetingTime"
+                        value={this.state.meetingInfo.meetingTime}
+                        onChange={this.handleInputChange}
+                        required
+                    />
+                    <fieldset>
+                        <legend>Attendees</legend>
+
+                        {[ ...Array(this.state.attendeesFields).keys()].map(item => (
+                            <input
+                                type="email"
+                                placeholder="Add attendee email"
+                                className="meeting-form__attendee"
+                                name={`attendee-${item}`}
+                            />
+                        ))}
+                        
+                        <button
+                            className="button button__secondary"
+                            onClick={this.addAttendee}
+                        >Add Attendee</button>
+                    </fieldset>
+
+                    <input
+                        type="submit"
+                        value="Save"
+                        className="button button__primary"
+                    />
                 </form>
             </section>
         )

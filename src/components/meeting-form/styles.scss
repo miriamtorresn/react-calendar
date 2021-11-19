@@ -1,0 +1,9 @@
+@import '../../ui/form';
+
+.meeting-form {
+    @extend .form;
+
+    &__wrapper {
+        @extend .form-wrapper;
+    }
+}

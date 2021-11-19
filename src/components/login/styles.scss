@@ -1,0 +1,10 @@
+@import '../../ui/form';
+
+.login {
+    @extend .form-wrapper;
+    height: 100vh;
+
+    &__form {
+        @extend .form;
+    }
+}

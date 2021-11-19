@@ -24,7 +24,9 @@ const get = (path: string) => {
     });
 };
 
-export default {
+const api = {
     post,
     get
 };
+
+export default api;

@@ -1,0 +1,22 @@
+@import './functions';
+
+$phone: rem(375);
+$tablet: rem(768);
+$tablet-landscape: rem(1024);
+$desktop: rem(1440);
+
+@mixin breakpoint($point) {
+    @if $point == desktop {
+      @media (min-width: $desktop) { @content ; }
+    }
+     @else if $point == tablet-landscape {
+      @media (min-width: $tablet-landscape) { @content ; }
+    }
+    @else if $point == tablet {
+      @media (min-width: $tablet)  { @content ; }
+    }
+    @else if $point == mobileonly {
+      @media (max-width: $phone)  { @content ; }
+    }
+}
+ 

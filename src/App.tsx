@@ -4,6 +4,8 @@ import Dashboard from './pages/Dashboard';
 import CreateMeeting from './pages/CreateMeeting';
 import NotFound from './pages/NotFound';
 
+import './ui/_base.scss';
+
 const App = () => (
   <Router>
     <Switch>

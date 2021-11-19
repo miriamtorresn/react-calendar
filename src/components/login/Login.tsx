@@ -5,6 +5,8 @@ import { withRouter } from 'react-router';
 import PropTypes from 'prop-types';
 import * as userActions from "../../redux/actions/userActions";
 
+import './styles.scss';
+
 class Login extends React.Component<any> {
     static propTypes = {
         history: PropTypes.object.isRequired
@@ -37,8 +39,9 @@ class Login extends React.Component<any> {
 
     render() {
         return (
-        <section>
-            <form onSubmit={this.submitLogin}>
+        <section className="login">
+            <form onSubmit={this.submitLogin} className="login__form">
+                <h2>Login</h2>
                 <input
                     type="text"
                     name="username"
@@ -55,7 +58,7 @@ class Login extends React.Component<any> {
                     onChange={this.handleInputChange}
                     required
                 />
-                <input type="submit" value="Submit" />
+                <input type="submit" value="Submit" className="button button__primary"/>
             </form>
         </section>
         )

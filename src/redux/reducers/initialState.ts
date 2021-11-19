@@ -1,4 +1,4 @@
-export default {
+const initialState = {
 	userReducer: {
 		user: {}
 	},
@@ -7,3 +7,5 @@ export default {
 		calendarDays: []
 	}
 };
+
+export default initialState;

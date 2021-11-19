@@ -1,0 +1,35 @@
+@import './variables';
+@import './functions';
+
+@mixin button() {
+    font-weight: 700;
+    cursor: pointer;
+    border-radius: rem(5);
+}
+
+.button {
+    &__primary {
+        @include button();
+
+        background-color: $main-color;
+        color: $light-text;
+        text-transform: uppercase;
+
+        &:hover {
+            background-color: $main-color-dark;
+        }
+    }
+
+    &__secondary {
+        @include button();
+
+        background-color: $gray;
+        border: none;
+        padding: rem(5) rem(15);
+
+        &:hover {
+            background-color: $med-gray;
+            color: $light-text;
+        }
+    }
+}
