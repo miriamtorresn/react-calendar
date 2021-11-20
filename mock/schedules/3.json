@@ -5,8 +5,8 @@
             "name": "Special meeting",
             "description": "Some special meeting",
             "attendees": [
-                "r.weasley",
-                "h.granger"
+                "r.weasley@hogwarts.edu",
+                "h.granger@hogwarts.edu"
             ]
         }
     ]

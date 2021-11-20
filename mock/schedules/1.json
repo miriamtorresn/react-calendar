@@ -5,8 +5,8 @@
             "name": "Special meeting",
             "description": "Some special meeting",
             "attendees": [
-                "l.lovewood",
-                "h.granger"
+                "l.lovewood@hogwarts.edu",
+                "h.granger@hogwarts.edu"
             ]
         },
         {
@@ -14,7 +14,7 @@
             "name": "One on One meeting",
             "description": "One on one",
             "attendees": [
-                "h.granger"
+                "h.granger@hogwarts.edu"
             ]
         }
     ]

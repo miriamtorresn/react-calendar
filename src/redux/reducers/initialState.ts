@@ -4,7 +4,8 @@ const initialState = {
 	},
 	scheduleReducer: {
 		loading: false,
-		calendarDays: []
+		calendarDays: [],
+		addedMeetings: []
 	}
 };
 

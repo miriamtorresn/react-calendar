@@ -10,6 +10,7 @@ export interface IMonthDay {
 
 export interface IDate {
     month: number;
-    date: number;
+    day: number;
     year: number;
+    date: Date;
 };

@@ -4,9 +4,13 @@ $phone: rem(375);
 $tablet: rem(768);
 $tablet-landscape: rem(1024);
 $desktop: rem(1440);
+$desktop-large: rem(1920);
 
 @mixin breakpoint($point) {
-    @if $point == desktop {
+    @if $point == desktop-large {
+      @media (min-width: $desktop-large) { @content ; }
+    }
+    @else if $point == desktop {
       @media (min-width: $desktop) { @content ; }
     }
      @else if $point == tablet-landscape {

@@ -41,9 +41,14 @@ fieldset {
     background-color: $light-text;
     padding: rem(40) rem(60);
     align-self: center;
+    flex-basis: 70%;
 
     @include breakpoint(tablet) {
         flex-basis: 40%;
+    }
+
+    @include breakpoint(desktop) {
+        flex-basis: 20%;
     }
 }
 

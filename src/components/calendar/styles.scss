@@ -25,6 +25,7 @@
     &__day {
         font-size: $main-font-size;
         font-weight: 300;
+        cursor: pointer;
     }
 
     &__heading {
@@ -52,8 +53,6 @@
     }
 
     &__has-event {
-        cursor: pointer;
-
         &:hover {
             border: solid rem(1) $main-color-light;
         }
