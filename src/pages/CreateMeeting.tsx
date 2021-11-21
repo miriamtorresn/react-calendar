@@ -3,7 +3,7 @@ import Navigation from '../components/navigation/Navigation';
 
 const CreateMeeting = () => (
   <article>
-    <Navigation />   
+    <Navigation /> 
     <MeetingForm />
   </article>
 )

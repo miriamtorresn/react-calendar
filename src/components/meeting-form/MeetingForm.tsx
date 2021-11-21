@@ -14,22 +14,25 @@ interface IAttendee {
     value: string;
 };
 
+const cleanMeetingInfo = {
+    name: '',
+    description: '',
+    meetingTime: '',
+    attendees: [],
+};
+
 class MeetingForm extends React.Component<any> {
     static propTypes = {
         history: PropTypes.object.isRequired
     };
 
     state = {
-        meetingInfo: {
-            name: '',
-            description: '',
-            meetingTime: '',
-            attendees: [],
-        },
-        attendeesFields: 1,
+        meetingInfo: cleanMeetingInfo,
         today: new Date(),
-        lastDayofMonth: {},
-        firstDayofMonth: {},
+        lastDayofMonth: '',
+        firstDayofMonth: '',
+        editingId: null,
+        isEditMode: false
     }
 
     componentDidMount() {
@@ -39,12 +42,51 @@ class MeetingForm extends React.Component<any> {
             history.push('/');
         }
             
-        const today = this.state.today;
-        const lastDayofMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-        const firstDayofMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-        this.setState({ today, lastDayofMonth, firstDayofMonth});
-       
+        const lastDayofMonth = this.getFormattedDateTime(new Date(this.state.today.getFullYear(), this.state.today.getMonth() + 1, 0));
+        const firstDayofMonth = this.getFormattedDateTime(new Date(this.state.today.getFullYear(), this.state.today.getMonth(), 1));
+        this.setState({ lastDayofMonth, firstDayofMonth});
+        this.readPath();
     }
+
+    componentDidUpdate(prevProps: any) {
+        if (prevProps.match.path !== this.props.match.path) {
+            this.readPath();
+        }
+    }
+
+    getEditingMeetingInfo = () => {
+        const { editMeeting } = this.props;
+        if (editMeeting && editMeeting.attendees) {
+  
+            // Map attendees
+            const attendees = editMeeting.attendees.map((attendee: string, index: number) => ({
+                id: index,
+                value: attendee
+            }));
+
+            const meetingTime = this.getFormattedDateTime(editMeeting.date.date);
+
+            // Update meeting info
+            const meetingInfo = {
+                ...editMeeting,
+                meetingTime,
+                attendees
+            }
+            this.setState({meetingInfo})
+        }
+    };
+
+    readPath = () => {
+        const { match } = this.props;
+        const isEditMode = match.path.includes('edit-meeting');
+        this.setState({ isEditMode });
+
+        if (isEditMode) {
+            this.getEditingMeetingInfo();
+        } else {
+            this.setState({ meetingInfo: cleanMeetingInfo });
+        }
+    };
 
     handleInputChange = (event: any) => {
         this.setState({ meetingInfo: {
@@ -54,20 +96,16 @@ class MeetingForm extends React.Component<any> {
         });
     };
 
-    handleAttendeeChange = (event: any, item: number) => {
+    handleAttendeeChange = (event: any, attendee: IAttendee) => {
         event.preventDefault();
         let found = false;
-        let attendees: IAttendee[] = this.state.meetingInfo.attendees.map((attendee: IAttendee) => {
-            if (attendee.id === item) {
+        let attendees: IAttendee[] = this.state.meetingInfo.attendees.map((_attendee: IAttendee) => {
+            if (_attendee.id === attendee.id) {
                 found = true;
                 attendee.value = event.target.value;
             }
-            return attendee;
+            return _attendee;
         });
-
-        if (!found) {
-            attendees = [...attendees, { id: item, value: event.target.value }];
-        }
 
         this.setState({ meetingInfo: {
             ...this.state.meetingInfo,
@@ -82,10 +120,14 @@ class MeetingForm extends React.Component<any> {
         const { addMeeting } = this.props;
         const meetingTime = new Date(this.state.meetingInfo.meetingTime);
         const meeting: IScheduleEvent = {
+            // Hardcoded Id as we don't have a post web service that returns the id if meeting created
+            id: this.props.calendarDays.length,
             time: meetingTime.getTime(),
             name: this.state.meetingInfo.name,
             description: this.state.meetingInfo.description,
-            attendees: this.state.meetingInfo.attendees.map((attendee: IAttendee) => attendee.value),
+            attendees: this.state.meetingInfo.attendees
+                .filter((attendee: IAttendee) => attendee.value !== '')
+                .map((attendee: IAttendee) => attendee.value),
             date: getDateDetails(meetingTime)
         };
         addMeeting(meeting);
@@ -95,16 +137,36 @@ class MeetingForm extends React.Component<any> {
 
     addAttendee = (event: React.FormEvent) => {
         event.preventDefault();
-        this.setState({
-            attendeesFields: this.state.attendeesFields + 1,
+        const attendees: IAttendee[] = [...this.state.meetingInfo.attendees];
+        attendees.push({
+            id: attendees.length,
+            value: ''
         });
+        this.setState({
+            meetingInfo: {
+                ...this.state.meetingInfo,
+                attendees
+            }
+        });
+    };
+
+    getFormattedDateTime = (date: Date) => (
+        `${date.getFullYear()}-${this.getTwoDigitsValue(`${date.getMonth() +1}`)}-${this.getTwoDigitsValue(`${date.getDate() + 1}`)}T${this.getTwoDigitsValue(`${date.getHours()}`)}:${this.getTwoDigitsValue(`${date.getMinutes()}`)}`
+    );
+
+    getTwoDigitsValue = (value: string) => (
+        value.padStart(2, '0')
+    );
+
+    getTitle = () => {
+        return this.state.isEditMode ? 'Edit event' : 'Add new event';
     };
     
     render() {
         return (
             <section className="meeting-form__wrapper">
                 <form onSubmit={this.saveEvent} className="meeting-form">
-                    <h2>Event</h2>
+                    <h2>{this.getTitle()}</h2>
                     <input
                         type="text"
                         placeholder="Add event name"
@@ -124,8 +186,8 @@ class MeetingForm extends React.Component<any> {
                     <input
                         type="datetime-local"
                         name="meetingTime"
-                        min={this.state.firstDayofMonth.toString()}
-                        max={this.state.lastDayofMonth.toString()}
+                        min={this.state.firstDayofMonth}
+                        max={this.state.lastDayofMonth}
                         value={this.state.meetingInfo.meetingTime}
                         onChange={this.handleInputChange}
                         required
@@ -133,17 +195,18 @@ class MeetingForm extends React.Component<any> {
                     <fieldset>
                         <legend>Attendees</legend>
 
-                        {[ ...Array(this.state.attendeesFields).keys()].map(item => (
+                        {this.state.meetingInfo.attendees.map((attendee: IAttendee) => (
                             <input
-                                key={`new-attendee-${item}`}
+                                key={`new-attendee-${attendee.id}`}
                                 type="email"
                                 placeholder="Add attendee email"
                                 className="meeting-form__attendee"
-                                name={`attendee-${item}`}
-                                onChange={(event) => this.handleAttendeeChange(event, item)}
+                                name={`attendee-${attendee.id}`}
+                                value={attendee.value}
+                                onChange={(event) => this.handleAttendeeChange(event, attendee)}
                             />
                         ))}
-                        
+
                         <button
                             className="button button__secondary"
                             onClick={this.addAttendee}
@@ -164,7 +227,8 @@ class MeetingForm extends React.Component<any> {
 const mapStateToProps = (state: any) => {
     return {
       user: state.userReducer.user,
-      calendarDays: state.scheduleReducer.calendarDays
+      calendarDays: state.scheduleReducer.calendarDays,
+      editMeeting: state.scheduleReducer.editMeeting
     }
 }
 

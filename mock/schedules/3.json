@@ -1,6 +1,7 @@
 {
     "schedule" : [
         {
+            "id": 1,
             "time": 1637033929,
             "name": "Special meeting",
             "description": "Some special meeting",

@@ -8,6 +8,9 @@
 }
 
 .button {
+    color: $dark-gray;
+    text-decoration: none;
+
     &__primary {
         @include button();
 

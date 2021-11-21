@@ -49,6 +49,11 @@ export default function scheduleReducer(state = initialState.scheduleReducer, ac
       } else {
         return state;
       }
+    case types.UPDATE_EDIT_MEETING:
+      return {
+        ...state,
+        editMeeting: action.meeting
+      };
     // Default return of state
     default:
       return state;

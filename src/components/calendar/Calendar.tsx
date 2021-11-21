@@ -33,14 +33,18 @@ class Calendar extends React.Component<any> {
         let classes = `calendar__day calendar__${day.month} calendar__item `;
         if (day.isToday) classes += `calendar__today `;
         if (day.isWeekend) classes += `calendar__weekend `;
-        if (day.events && day.events.length > 0) classes += `calendar__has-event`;
+        if (this.dayHasEvents(day)) classes += `calendar__has-event`;
         return classes;
     }
 
     getIndicatorClass = (day: IMonthDay) => {
         let classes = `calendar__indicator `;
-        if (day.events && day.events.length > 0) classes += `calendar__indicator--on`;
+        if (this.dayHasEvents(day)) classes += `calendar__indicator--on`;
         return classes;
+    }
+
+    dayHasEvents(day: IMonthDay) {
+        return day.events && day.events.length > 0;
     }
 
     closeModal = () => {
