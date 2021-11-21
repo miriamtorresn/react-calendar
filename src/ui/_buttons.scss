@@ -28,7 +28,8 @@
 
         background-color: $gray;
         border: none;
-        padding: rem(5) rem(15);
+        padding: rem(10) rem(15);
+        width: 100%;
 
         &:hover {
             background-color: $med-gray;
