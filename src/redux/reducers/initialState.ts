@@ -6,7 +6,7 @@ const initialState = {
 		loading: false,
 		calendarDays: [],
 		addedMeetings: [],
-		editMeeting: {}
+		meetingToEdit: {}
 	}
 };
 

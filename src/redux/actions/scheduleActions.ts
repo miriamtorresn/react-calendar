@@ -13,8 +13,12 @@ export function addMeeting(meeting: IScheduleEvent) {
   return { type: types.ADD_SCHEDULE_EVENT, meeting };
 }
 
-export function updateEditMeeting(meeting: IScheduleEvent) {
-  return { type: types.UPDATE_EDIT_MEETING, meeting };
+export function editMeeting(meeting: IScheduleEvent) {
+  return { type: types.EDIT_SCHEDULE_EVENT, meeting };
+}
+
+export function updateMeetingToEdit(meeting: IScheduleEvent) {
+  return { type: types.UPDATE_MEETING_TO_EDIT, meeting };
 }
 
 export function loadCalendar(userID: number) {

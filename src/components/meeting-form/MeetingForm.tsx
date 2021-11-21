@@ -55,20 +55,20 @@ class MeetingForm extends React.Component<any> {
     }
 
     getEditingMeetingInfo = () => {
-        const { editMeeting } = this.props;
-        if (editMeeting && editMeeting.attendees) {
+        const { meetingToEdit } = this.props;
+        if (meetingToEdit && meetingToEdit.attendees) {
   
             // Map attendees
-            const attendees = editMeeting.attendees.map((attendee: string, index: number) => ({
+            const attendees = meetingToEdit.attendees.map((attendee: string, index: number) => ({
                 id: index,
                 value: attendee
             }));
 
-            const meetingTime = this.getFormattedDateTime(editMeeting.date.date);
+            const meetingTime = this.getFormattedDateTime(meetingToEdit.date.date);
 
             // Update meeting info
             const meetingInfo = {
-                ...editMeeting,
+                ...meetingToEdit,
                 meetingTime,
                 attendees
             }
@@ -117,11 +117,11 @@ class MeetingForm extends React.Component<any> {
     saveEvent = (event: React.FormEvent) => {
         event.preventDefault();
 
-        const { addMeeting } = this.props;
+        const { addMeeting, editMeeting } = this.props;
         const meetingTime = new Date(this.state.meetingInfo.meetingTime);
         const meeting: IScheduleEvent = {
             // Hardcoded Id as we don't have a post web service that returns the id if meeting created
-            id: this.props.calendarDays.length,
+            id: this.state.isEditMode ? this.props.meetingToEdit.id : this.props.calendarDays.length,
             time: meetingTime.getTime(),
             name: this.state.meetingInfo.name,
             description: this.state.meetingInfo.description,
@@ -130,7 +130,13 @@ class MeetingForm extends React.Component<any> {
                 .map((attendee: IAttendee) => attendee.value),
             date: getDateDetails(meetingTime)
         };
-        addMeeting(meeting);
+
+        if (this.state.isEditMode) {
+            editMeeting(meeting);
+        } else {
+            addMeeting(meeting);
+        }
+
         const { history } = this.props;
         history.push('/dashboard');
     };
@@ -151,7 +157,7 @@ class MeetingForm extends React.Component<any> {
     };
 
     getFormattedDateTime = (date: Date) => (
-        `${date.getFullYear()}-${this.getTwoDigitsValue(`${date.getMonth() +1}`)}-${this.getTwoDigitsValue(`${date.getDate() + 1}`)}T${this.getTwoDigitsValue(`${date.getHours()}`)}:${this.getTwoDigitsValue(`${date.getMinutes()}`)}`
+        `${date.getFullYear()}-${this.getTwoDigitsValue(`${date.getMonth() +1}`)}-${this.getTwoDigitsValue(`${date.getDate()}`)}T${this.getTwoDigitsValue(`${date.getHours()}`)}:${this.getTwoDigitsValue(`${date.getMinutes()}`)}`
     );
 
     getTwoDigitsValue = (value: string) => (
@@ -228,13 +234,14 @@ const mapStateToProps = (state: any) => {
     return {
       user: state.userReducer.user,
       calendarDays: state.scheduleReducer.calendarDays,
-      editMeeting: state.scheduleReducer.editMeeting
+      meetingToEdit: state.scheduleReducer.meetingToEdit
     }
 }
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
     addMeeting: bindActionCreators(scheduleActions.addMeeting, dispatch),
+    editMeeting: bindActionCreators(scheduleActions.editMeeting, dispatch),
   };
 };
 

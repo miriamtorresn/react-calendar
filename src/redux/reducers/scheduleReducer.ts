@@ -49,10 +49,36 @@ export default function scheduleReducer(state = initialState.scheduleReducer, ac
       } else {
         return state;
       }
-    case types.UPDATE_EDIT_MEETING:
+    // Edit schedule event
+    case types.EDIT_SCHEDULE_EVENT:
+      if (action && action.meeting) {
+        const meeting: IScheduleEvent = action.meeting;
+        const newCalendarDays = state.calendarDays.map((_day: IMonthDay) => {
+          const newDay = {..._day};
+          if (newDay.events) {
+            const events: IScheduleEvent[] = newDay.events?.map(_event => {
+              let newEvent = {..._event};
+              if (_event.id === meeting.id) {
+                newEvent = {...meeting};
+              }
+              return newEvent;
+            });
+            newDay.events = [...events];
+          }
+          return newDay;
+        });
+        return {
+          ...state,
+          calendarDays: newCalendarDays
+        };
+      } else {
+        return state;
+      }
+    // Update meeting to be edited
+    case types.UPDATE_MEETING_TO_EDIT:
       return {
         ...state,
-        editMeeting: action.meeting
+        meetingToEdit: action.meeting
       };
     // Default return of state
     default:

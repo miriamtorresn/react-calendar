@@ -15,7 +15,7 @@ const DayDetails = (props: IDayDetailsProps) => {
     const dispatch = useDispatch();
 
     const edit = (event: IScheduleEvent) => {
-        dispatch(scheduleActions.updateEditMeeting(event));
+        dispatch(scheduleActions.updateMeetingToEdit(event));
         history.push(`/edit-meeting/${event.id}`);
     };
 
